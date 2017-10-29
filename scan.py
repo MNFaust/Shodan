@@ -67,8 +67,6 @@ def argParse():
     api = shodan.Shodan(SHODAN_API_KEY)
     global pages
     pages = int(args.Pages)
-    if directory == "None":
-        print("[+] directory is null, storing to current working directory.")
 
 
 def createFiles():
@@ -108,43 +106,41 @@ def errorChecking(results):
 #==================
 # MAIN
 #==================
+if __name__ == "__main__":
+    logo()
+    argParse()
+    results = api.search(params)
+    errorChecking(results)
 
-logo()
-argParse()
-results = api.search(params)
-errorChecking(results)
+    # Create Files to store data & add data:
+    createFiles()
+    print("[+] Searching for: " + params)
+    print("[+] Results Found: %s" % results['total'])
+    ifile.write('Total Results: %s \n' % results['total'])
 
-
-
-# Create Files to store data & add data:
-createFiles()
-print("[+] Searching for: " + params)
-print("[+] Results Found: %s" % results['total'])
-ifile.write('Total Results: %s \n' % results['total'])
-
-if (limit > 100):
-    try:
-        print("[+] Using limit of " + str(limit))
-        results = api.search(params, limit=limit)
-        for result in results['matches']:
-            #data = ('%s' % result['data']).encode('utf-8').strip()
-            #dfile.write(str(data) + "\n")
-            #ip = ("%s" % result['ip_str']).encode('utf-8').strip()
-            ifile.write("%s \n" % result['ip_str'])
-    except shodan.APIError as e:
-        print('!!! [+] Error: %s' % e)
-elif (pages > 1):
-    for i in range (0, pages):
+    if (limit > 100):
         try:
-            print("[+] Saving " + pages + " of data")
-            results = api.search(params, page=i)
+            print("[+] Using limit of " + str(limit))
+            results = api.search(params, limit=limit)
             for result in results['matches']:
                 #data = ('%s' % result['data']).encode('utf-8').strip()
-                #dfile.write(str(data)+"\n")
+                #dfile.write(str(data) + "\n")
                 #ip = ("%s" % result['ip_str']).encode('utf-8').strip()
                 ifile.write("%s \n" % result['ip_str'])
         except shodan.APIError as e:
-            print('!!! [+] ERROR: %s' % e)
+            print('!!! [+] Error: %s' % e)
+    elif (pages > 1):
+        for i in range (0, pages):
+            try:
+                print("[+] Saving " + pages + " of data")
+                results = api.search(params, page=i)
+                for result in results['matches']:
+                    #data = ('%s' % result['data']).encode('utf-8').strip()
+                    #dfile.write(str(data)+"\n")
+                    #ip = ("%s" % result['ip_str']).encode('utf-8').strip()
+                    ifile.write("%s \n" % result['ip_str'])
+            except shodan.APIError as e:
+                print('!!! [+] ERROR: %s' % e)
 ifile.close()
 dfile.close()
 print("[+] Done.")
