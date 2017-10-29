@@ -10,7 +10,7 @@
         |___\___/|_|    |____/|_| |_|\___/ \__,_|\__,_|_| |_|
         By: Joshua Faust
 ## 
-### Search for anything using the Shodan Pyhton API.
+### Search for anything using the Shodan Python API.
 This program was specifically designed to ease in the search and storing of data to text files for IoT device research.
 
 ## Usage
