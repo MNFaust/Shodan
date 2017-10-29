@@ -10,3 +10,15 @@
         |___\___/|_|    |____/|_| |_|\___/ \__,_|\__,_|_| |_|
         By: Joshua Faust
 ## 
+### Search for anything using the Shodan Pyhton API.
+This program was specifically designed to ease in the search and storing of data to text files for IoT device research.
+
+## Usage
+    usage: scan.py [-h] -a  -s  [-d] [-p]
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      -a , --api         Shodan API Key
+      -s , --search      Seach parameters
+      -d , --directory   Choose Directory to save data
+      -p , --pages       Number of page results to be listed
