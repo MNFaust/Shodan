@@ -11,6 +11,7 @@ import os.path
 SHODAN_API_KEY = "None"
 directory = "None"
 params = "None"
+limit = "None"
 api = "None"
 ifile = 'None'
 dfile = 'None'
@@ -51,8 +52,11 @@ def argParse():
     parser.add_argument("-s", "--search", dest="Search", required="true" ,help="Seach parameters", metavar='')
     parser.add_argument("-d", "--directory", dest="Directory",metavar='', help="Choose Directory to save data")
     parser.add_argument("-p", "--pages", dest="Pages", metavar='', default=1, help="Number of page results to be listed")
+    parser.add_argument("-l", "--limit", dest="limit", metavar="", default=100, help="Number of records to save")
     args = parser.parse_args()
 
+    global limit
+    limit = int(args.limit)
     global params
     params = str(args.Search)
     global directory
@@ -88,6 +92,19 @@ def createFiles():
             ifile = open('ips.txt', 'w')
             dfile = open('data.txt', 'w')
 
+
+def errorChecking(results):
+    # Check if the total number of results is smaller than the page/limit results to avoid exceptions
+    if (pages > 1 and 100 * pages > int(results['total']) or limit > int(results['total'])):
+        print("[+] Page request is too large as there are only " + str(
+            results['total']) + " total results. Lower your page request!")
+        print("[+] Exiting Program.")
+        exit(1)
+
+    elif (pages > 1 and limit > 100):
+        print("You cannot specify both Pages and Limit, choose one.")
+        exit(1)
+
 #==================
 # MAIN
 #==================
@@ -95,28 +112,39 @@ def createFiles():
 logo()
 argParse()
 results = api.search(params)
+errorChecking(results)
 
 
-# Check if the total number of results is smaller than the page results to avoid exceptions
-if (pages > 1 and 100*pages > int(results['total'])):
-    print("[+] Page request is too large as there are only " + str(results['total']) + " total results. Lower your page request!")
-    print("[+] Exiting Program.")
-    exit(1)
 
 # Create Files to store data & add data:
 createFiles()
 print("[+] Searching for: " + params)
 print("[+] Results Found: %s" % results['total'])
 ifile.write('Total Results: %s \n' % results['total'])
-for i in range (0, pages):
+
+if (limit > 100):
     try:
-        results = api.search(params, page=i)
+        print("[+] Using limit of " + str(limit))
+        results = api.search(params, limit=limit)
         for result in results['matches']:
-            data = ('%s' % result['data']).encode('utf-8').strip()
-            dfile.write(str(data)+"\n")
-            ifile.write('%s \n' % result['ip_str'])
+            #data = ('%s' % result['data']).encode('utf-8').strip()
+            #dfile.write(str(data) + "\n")
+            #ip = ("%s" % result['ip_str']).encode('utf-8').strip()
+            ifile.write("%s \n" % result['ip_str'])
     except shodan.APIError as e:
         print('!!! [+] Error: %s' % e)
+elif (pages > 1):
+    for i in range (0, pages):
+        try:
+            print("[+] Saving " + pages + " of data")
+            results = api.search(params, page=i)
+            for result in results['matches']:
+                #data = ('%s' % result['data']).encode('utf-8').strip()
+                #dfile.write(str(data)+"\n")
+                #ip = ("%s" % result['ip_str']).encode('utf-8').strip()
+                ifile.write("%s \n" % result['ip_str'])
+        except shodan.APIError as e:
+            print('!!! [+] ERROR: %s' % e)
 ifile.close()
 dfile.close()
 print("[+] Done.")
