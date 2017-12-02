@@ -1,0 +1,20 @@
+2017-11-30 11:30:45
+linux upnp avtech product:"Avtech AVN801 network camera": 48059
+SQ-WEBCAM product:"dvr1614n web-cam httpd": 94
+netcam product:"TRENDnet TV-IP100 or TV-IP110 webcam display httpd": 29
+port:554 has_screenshot:true: 781
+Heatmiser: 8
+product:samsung port:8001: 9840
+product:samsung version:"UN50H6400": 212
+product:samsung version:"UN50H5800": 214
+webOS + tv/version: 4063
+2017-11-30 11:33:31
+linux upnp avtech product:"Avtech AVN801 network camera": 48059
+SQ-WEBCAM product:"dvr1614n web-cam httpd": 94
+netcam product:"TRENDnet TV-IP100 or TV-IP110 webcam display httpd": 29
+port:554 has_screenshot:true: 781
+Heatmiser: 8
+product:samsung port:8001: 9840
+product:samsung version:"UN50H6400": 212
+product:samsung version:"UN50H5800": 214
+webOS + tv/version: 4063
